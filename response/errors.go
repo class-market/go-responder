@@ -17,6 +17,7 @@ type ErrorResponse struct {
 
 const (
 	badRequestMsg          = "Your request is in a bad format."
+	conflictMsg            = "Your request is in a bad format."
 	forbiddenMsg           = "You are not authorized to perform the requested action."
 	unauthorizedMsg        = "You are not authenticated to perform the requested action."
 	notFoundMsg            = "The requested resource was not found."
@@ -48,14 +49,14 @@ func (e *ErrorResponse) GetData() interface{} {
 	return e.Errors
 }
 
-// InternalServerError creates a new error response representing an internal server error (HTTP 500)
-func InternalServerError(msg string) Response {
-	return makeErrorResponse(msg, internalServerErrorMsg, nil, http.StatusInternalServerError)
+// BadRequest creates a new error response representing a bad request (HTTP 400)
+func BadRequest(msg string) Response {
+	return makeErrorResponse(msg, badRequestMsg, nil, http.StatusBadRequest)
 }
 
-// NotFound creates a new error response representing a resource-not-found error (HTTP 404)
-func NotFound(msg string) Response {
-	return makeErrorResponse(msg, notFoundMsg, nil, http.StatusNotFound)
+// InvalidInput creates a new error response representing a data validation error (HTTP 400) with error interface.
+func InvalidInput(msg string, errors interface{}) Response {
+	return makeErrorResponse(msg, invalidInputMsg, errors, http.StatusBadRequest)
 }
 
 // Unauthorized creates a new error response representing an authentication/authorization failure (HTTP 401)
@@ -68,14 +69,19 @@ func Forbidden(msg string) Response {
 	return makeErrorResponse(msg, forbiddenMsg, nil, http.StatusForbidden)
 }
 
-// BadRequest creates a new error response representing a bad request (HTTP 400)
-func BadRequest(msg string) Response {
-	return makeErrorResponse(msg, badRequestMsg, nil, http.StatusBadRequest)
+// NotFound creates a new error response representing a resource-not-found error (HTTP 404)
+func NotFound(msg string) Response {
+	return makeErrorResponse(msg, notFoundMsg, nil, http.StatusNotFound)
 }
 
-// InvalidInput creates a new error response representing a data validation error (HTTP 400) with error interface.
-func InvalidInput(msg string, errors interface{}) Response {
-	return makeErrorResponse(msg, invalidInputMsg, errors, http.StatusBadRequest)
+// Conflict creates a new error response representing a conflict (HTTP 409)
+func Conflict(msg string) Response {
+	return makeErrorResponse(msg, conflictMsg, nil, http.StatusConflict)
+}
+
+// InternalServerError creates a new error response representing an internal server error (HTTP 500)
+func InternalServerError(msg string) Response {
+	return makeErrorResponse(msg, internalServerErrorMsg, nil, http.StatusInternalServerError)
 }
 
 func makeErrorResponse(msg string, defMsg string, errors interface{}, status int) Response {

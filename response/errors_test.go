@@ -61,6 +61,14 @@ func TestBadRequest(t *testing.T) {
 	assert.NotEmpty(t, res.Error())
 }
 
+func TestConflict(t *testing.T) {
+	res := Conflict("test")
+	assert.Equal(t, http.StatusConflict, res.StatusCode())
+	assert.Equal(t, "test", res.Error())
+	res = Conflict("")
+	assert.NotEmpty(t, res.Error())
+}
+
 func TestResponseInvalidInput(t *testing.T) {
 
 	type testStruct struct {
